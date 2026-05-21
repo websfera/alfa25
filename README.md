@@ -1,6 +1,6 @@
 # Alfa25 - PHP Development Project
 
-Projekt s PHP 8.2, MySQL 8.0 a Docker devstackem pro lokální vývoj.
+Výukový MVC projekt (messenger) s PHP 8.2, MySQL 8.0 a Docker devstackem pro lokální vývoj.
 
 ## 🚀 Požadavky
 
@@ -71,7 +71,9 @@ docker-compose logs -f web
 - **Host**: `db` (uvnitř Docker sítě) nebo `localhost:33061` (z host systému)
 - **Uživatel**: `root`
 - **Heslo**: `alfadb`
-- **Databáze**: `alfa24`
+- **Databáze (aplikace)**: `alfa25` (`config/config.yaml`)
+
+> ℹ️ `docker-compose.yml` má aktuálně `MYSQL_DATABASE: alfa24`, ale aplikace čte DSN z `config/config.yaml` (`alfa25`). Pro lokální běh doporučujeme názvy databáze sjednotit.
 
 ## 📁 Struktura projektu
 
@@ -81,19 +83,28 @@ docker-compose logs -f web
 │   └── build/
 │       └── Dockerfile          # PHP 8.2 + Apache konfigurace
 ├── docker-compose.yml          # Docker Compose konfigurace
-├── classes/                    # PHP třídy
-│   ├── User.php
-│   ├── GenderEnum.php
-│   ├── Obdelnik.php
-│   └── Ctverec.php
+├── src/                        # Aplikace (MVC + služby)
+│   ├── Config/
+│   ├── Controller/
+│   ├── DI/
+│   ├── Enum/
+│   ├── Model/
+│   ├── Router/
+│   ├── Service/
+│   └── View/
 ├── template/                   # HTML šablony
-│   ├── login.html
-│   ├── messenger.html
-│   └── css/
-│       └── style.css
+│   ├── Home/
+│   ├── Log/
+│   ├── Messenger/
+│   ├── Error/
+│   └── layout.phtml
+├── config/                     # Konfigurace aplikace/služeb
+│   ├── config.yaml
+│   └── services.yaml
 ├── vendor/                     # Composer závislosti
 ├── index.php                   # Hlavní soubor aplikace
 ├── .htaccess                   # Apache URL rewriting
+├── dump.sql                    # SQL dump s ukázkovými daty
 ├── composer.json               # Composer závislosti
 └── README.md                   # Tento soubor
 ```
@@ -102,7 +113,7 @@ docker-compose logs -f web
 
 - `ramsey/uuid` - generování UUID
 - `tracy/tracy` - debugging tool
-- `brick/math` - matematické operace
+- `symfony/yaml` - načítání YAML konfigurace
 
 ### Instalace nových balíčků
 
@@ -158,10 +169,7 @@ Projekt používá **Tracy Debugger** pro zobrazení chyb a ladění.
 ```php
 use Tracy\Debugger;
 
-// Zapnutí debuggeru (výchozí)
-Debugger::enable();
-
-// Vypnutí debuggeru pro produkci
+// Vypnutí debuggeru (aktuální nastavení v index.php)
 Debugger::enable(false);
 
 // Dump proměnné
@@ -244,19 +252,11 @@ Projekt je nastaven na časovou zónu: **Europe/Prague**
 
 ### Composer autoload
 
-Všechny třídy v `classes/` adresáři je třeba includovat ručně nebo upravit `composer.json` pro PSR-4 autoloading:
+Projekt používá PSR-4 autoloading:
 
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "App\\": "classes/"
-        }
-    }
-}
-```
+- `App\\` → `src/`
 
-Po úpravě spustit:
+Po změně namespace nebo struktury tříd spusťte:
 ```bash
 docker exec alfa-web composer dump-autoload
 ```
