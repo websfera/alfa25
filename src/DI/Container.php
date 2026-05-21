@@ -6,10 +6,10 @@ use App\Config\Config;
 use App\Model\Repository\ConversationRepository;
 use App\Model\Repository\MessageRepository;
 use App\Model\Repository\UserRepository;
-use Tracy\Debugger;
 
 final class Container
 {
+    // Výukový DI kontejner: drží konfiguraci, služby (singleton) a továrny na repository.
     private Config $config;
     private array $services;
 
@@ -30,7 +30,7 @@ final class Container
             return $this->services[$name];
         }
 
-        $servicesDefinitions = $this->getConfig('services');
+        $servicesDefinitions = $this->getConfig('services') ?? [];
 
         if (!isset($servicesDefinitions[$name])) {
             throw new ServiceNotFoundException(
@@ -38,11 +38,22 @@ final class Container
             );
         }
 
-        $serviceClassname = $servicesDefinitions[$name]['class'];
+        $definition = $servicesDefinitions[$name];
+        $serviceClassname = is_string($definition)
+            ? $definition
+            : ($definition['class'] ?? null);
+
+        if (!is_string($serviceClassname) || $serviceClassname === '') {
+            throw new ServiceNotFoundException(
+                'Service "' . $name . '" has invalid class definition in services.yaml.'
+            );
+        }
 
         $params = [];
-        foreach ($servicesDefinitions[$name]['params'] as $key => $value) {
-            if (str_starts_with($value, '@')) {
+        $definitionParams = is_array($definition) ? ($definition['params'] ?? []) : [];
+        foreach ($definitionParams as $key => $value) {
+            if (is_string($value) && str_starts_with($value, '@')) {
+                // @database.dsn -> načti hodnotu z konfigurace
                 $params[$key] = $this->getConfig(substr($value, 1));
 
                 continue;

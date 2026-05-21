@@ -176,6 +176,56 @@ Debugger::log('zpráva');
 
 ## 📝 Poznámky
 
+## 🧱 MVC v tomto projektu (pro studenty)
+
+- **Router (`src/Router/Router.php`)**: mapuje URL na konkrétní controller + akci.
+- **Controller (`src/Controller/*`)**: zpracuje request, zavolá repository/služby a připraví data pro view.
+- **Model/Repository (`src/Model/*`)**: obsahuje SQL a mapování dat na entity.
+- **View (`template/*`)**: pouze vykreslení dat do HTML (bez SQL a bez business logiky).
+
+Základní flow je: `URL -> Router -> Controller -> Repository/Entity -> TemplateRenderer -> HTML`.
+
+## 🧭 Důležité routy
+
+- `/` domovská stránka
+- `/o-aplikaci`, `/o-vyvojari`, `/kontakt` obsahové stránky
+- `/prihlaseni`, `/registrace`, `/odhlaseni` autentizace
+- `/messenger` seznam konverzací
+- `/messenger/{conversationId}` detail konverzace + odeslání zprávy
+- `/messenger/nova/{userId}` založení 1:1 konverzace
+
+## ✅ Funkční minimum
+
+- přihlášení a odhlášení uživatele
+- registrace nového uživatele
+- výpis konverzací přihlášeného uživatele
+- výpis zpráv vybrané konverzace
+- odeslání nové zprávy do konverzace
+- založení nové 1:1 konverzace s jiným uživatelem
+
+## 📌 TODO (nice-to-have)
+
+Některé části v kódu jsou označené krátkým `TODO` a odkazují sem.
+
+1. **Nekonečné scrollování zpráv**
+   - implementovat načítání starších zpráv při scrollu nahoru
+   - backend: endpoint pro stránkované načtení zpráv (`limit`, `offset`)
+   - frontend: AJAX/fetch bez reloadu celé stránky
+
+2. **AJAX odesílání zpráv**
+   - odeslat zprávu bez refresh stránky
+   - po odeslání doplnit zprávu rovnou do DOM
+
+3. **Lepší seznam konverzací**
+   - zobrazit poslední zprávu a čas
+   - zvýraznit konverzace s nepřečtenými zprávami
+
+4. **Vyhledávání kontaktů**
+   - filtrovat uživatele na pravém panelu messengeru
+
+5. **Základní testy**
+   - alespoň smoke testy pro router a repository (např. nad test DB)
+
 ### Apache konfigurace
 
 Apache má povolený `mod_rewrite` a `AllowOverride All` pro `.htaccess` soubory.

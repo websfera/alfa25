@@ -5,5 +5,5 @@ services:
       dsn: "@database.dsn"
       username: "@database.username"
       password: "@database.password"
-  service1: "App\\Class\\SomeClass"
-  service2: "App\\Class\\SomeClass2"
+  passwordHasher:
+    class: "App\\Service\\PasswordHasher"

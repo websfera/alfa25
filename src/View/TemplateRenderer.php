@@ -2,10 +2,9 @@
 
 namespace App\View;
 
-use Tracy\Debugger;
-
 class TemplateRenderer
 {
+    // Jednoduchý renderer: složí data + šablonu + layout do výsledného HTML.
     public function __construct(
         private string $templatePath,
         protected array $globalParams = []

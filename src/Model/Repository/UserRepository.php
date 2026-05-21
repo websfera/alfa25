@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 
 class UserRepository extends BaseRepository
 {
+    // Repository pracuje jen s entitou User a skrývá SQL detaily před controllery.
     public function findByEmail(string $email): User|null
     {
         $sql = "SELECT * FROM `user` WHERE email = :email";
@@ -47,10 +48,11 @@ class UserRepository extends BaseRepository
     {
         $uuid = $this->convertUuid($id);
 
-        $sql = "SELECT * FROM `user` WHERE uuid = ?;";
+        $sql = "SELECT * FROM `user` WHERE uuid = :uuid LIMIT 1";
 
-        $statement = $this->dbConnection->query($sql);
-        $statement->bindValue(1, $uuid->getBytes(), PDO::PARAM_LOB);
+        $statement = $this->dbConnection->prepare($sql);
+        $statement->bindValue('uuid', $uuid->getBytes(), PDO::PARAM_LOB);
+        $statement->execute();
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
         $row = $rows[0] ?? null;
 
@@ -59,6 +61,25 @@ class UserRepository extends BaseRepository
         }
 
         return $this->mapRowToUser($row);
+    }
+
+    /** @return array<int, User> */
+    public function findAllExcept(Uuid|string $userId): array
+    {
+        $uuid = $this->convertUuid($userId);
+
+        $sql = "SELECT * FROM `user` WHERE uuid <> :uuid ORDER BY username ASC";
+        $statement = $this->dbConnection->prepare($sql);
+        $statement->bindValue('uuid', $uuid->getBytes(), PDO::PARAM_LOB);
+        $statement->execute();
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $users = [];
+        foreach ($rows as $row) {
+            $users[] = $this->mapRowToUser($row);
+        }
+
+        return $users;
     }
 
     public function save(User $user): void

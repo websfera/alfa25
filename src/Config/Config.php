@@ -3,10 +3,10 @@
 namespace App\Config;
 
 use Symfony\Component\Yaml\Yaml;
-use Tracy\Debugger;
 
 final class Config
 {
+    // Jednoduché úložiště konfigurace načtené z více YAML souborů.
     private array $configValues = [];
 
     public function load(string $filePath): void
@@ -21,9 +21,7 @@ final class Config
         $values = $this->configValues;
 
         foreach ($keys as $key) {
-            if (!is_array($values[$key]) &&
-                !array_key_exists($key, $values)
-            ) {
+            if (!is_array($values) || !array_key_exists($key, $values)) {
                 throw new ConfigValueNotDefinedException(
                     "Config value '{$name}' ('{$key}') not defined."
                 );
