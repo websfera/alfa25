@@ -1,6 +1,6 @@
 # Alfa25 - PHP Development Project
 
-Výukový MVC projekt (messenger) s PHP 8.2, MySQL 8.0 a Docker devstackem pro lokální vývoj.
+Výukový MVC projekt (messenger) s PHP 8.2, MySQL 8.0 a Docker dev stackem pro lokální vývoj.
 
 ## 🚀 Požadavky
 
