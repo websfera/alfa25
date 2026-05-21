@@ -226,6 +226,14 @@ Některé části v kódu jsou označené krátkým `TODO` a odkazují sem.
 5. **Základní testy**
    - alespoň smoke testy pro router a repository (např. nad test DB)
 
+6. **Guardy a validace v messengeru**
+   - ošetřit neplatný formát UUID v URL (`/messenger/{conversationId}`)
+   - přidat jednotné zpracování prázdných/neplatných vstupů pro akce messengeru
+
+7. **Manuální test checklist pro studenty**
+   - připravit krátký krokový scénář: registrace -> login -> založení konverzace -> odeslání zprávy -> odhlášení
+   - doplnit očekávané výsledky pro každý krok
+
 ### Apache konfigurace
 
 Apache má povolený `mod_rewrite` a `AllowOverride All` pro `.htaccess` soubory.

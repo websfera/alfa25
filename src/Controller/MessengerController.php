@@ -41,8 +41,10 @@ class MessengerController extends BaseController
         );
 
         if ($selectedConversationId !== '' && !in_array($selectedConversationId, $allowedConversationIds, true)) {
-            $this->addFlashMessage('K této konverzaci nemáte přístup.', 'error');
-            $this->redirect('messenger');
+            http_response_code(403);
+            $this->template->render('Error/403.phtml', [], null);
+
+            return;
         }
 
         $messages = [];

@@ -3,6 +3,7 @@
 namespace App\Router;
 
 use App\DI\Container;
+use App\View\TemplateRenderer;
 class Router
 {
     // Jednoduchý router: mapuje URL na controller a metodu (akci).
@@ -52,7 +53,8 @@ class Router
 
         if ($match === null) {
             http_response_code(404);
-            echo "404 Page not found";
+            $renderer = new TemplateRenderer('template/');
+            $renderer->render('Error/404.phtml', [], null);
 
             return;
         }
