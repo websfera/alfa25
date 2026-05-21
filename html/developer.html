@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger – O vývojáři</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navigace -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">💬 Messenger</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Domů</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">O aplikaci</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="developer.html">O vývojáři</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Kontakt</a></li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <a href="login.html" class="btn btn-outline-light">Přihlásit se</a>
+                    <a href="register.html" class="btn btn-light text-primary fw-semibold">Registrovat</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Obsah -->
+    <main class="flex-grow-1 py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7 text-center">
+                    <!-- Avatar placeholder -->
+                    <div class="developer-avatar mx-auto mb-4">
+                        <span class="fs-1">👨‍💻</span>
+                    </div>
+                    <h1 class="mb-1">Jan Novák</h1>
+                    <p class="text-muted mb-3">PHP vývojář &amp; lektor</p>
+
+                    <div class="d-flex justify-content-center gap-2 mb-4">
+                        <span class="badge bg-primary">PHP</span>
+                        <span class="badge bg-secondary">MySQL</span>
+                        <span class="badge bg-dark">Docker</span>
+                        <span class="badge bg-info text-dark">HTML/CSS</span>
+                        <span class="badge bg-warning text-dark">JavaScript</span>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <p class="text-muted text-start">
+                        Vítejte na stránce o vývojáři. Tento projekt vznikl jako výuková aplikace
+                        pro studenty kurzu PHP. Cílem bylo vytvořit jednoduchý, ale kompletní příklad
+                        moderního PHP projektu se správnou architekturou.
+                    </p>
+                    <p class="text-muted text-start">
+                        Aplikace demonstruje práci s routerem, DI kontejnerem, šablonami,
+                        databázovými entitami a repositáři.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Patička -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="fw-bold">💬 Messenger</h6>
+                    <p class="text-muted small mb-0">Jednoduchá aplikace pro výuku PHP.</p>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="fw-bold">Stránky</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li><a href="about.html" class="footer-link">O aplikaci</a></li>
+                        <li><a href="developer.html" class="footer-link">O vývojáři</a></li>
+                        <li><a href="contact.html" class="footer-link">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold">Účet</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li><a href="login.html" class="footer-link">Přihlásit se</a></li>
+                        <li><a href="register.html" class="footer-link">Registrovat</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-3">
+            <p class="text-center text-muted small mb-0">&copy; 2025 Messenger. Vytvořeno pro výuku PHP.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

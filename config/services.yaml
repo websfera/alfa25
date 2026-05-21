@@ -1,0 +1,9 @@
+services:
+  database:
+    class: "App\\Model\\Database"
+    params:
+      dsn: "@database.dsn"
+      username: "@database.username"
+      password: "@database.password"
+  service1: "App\\Class\\SomeClass"
+  service2: "App\\Class\\SomeClass2"

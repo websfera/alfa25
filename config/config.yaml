@@ -1,0 +1,12 @@
+app:
+  base_url: 'http://localhost/'
+  debug: true
+  timezone: 'Europe/Prague'
+
+database:
+  dsn: 'mysql:dbname=alfa25;host=alfa-mysql'
+  username: 'root'
+  password: 'alfadb'
+  charset: 'utf8mb4'
+
+test: null
