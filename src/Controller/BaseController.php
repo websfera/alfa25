@@ -5,11 +5,10 @@ namespace App\Controller;
 use App\DI\Container;
 use App\Model\Database;
 use App\View\TemplateRenderer;
-use RuntimeException;
-use Tracy\Debugger;
 
 abstract class BaseController
 {
+    // Společný základ controllerů: DI, DB, šablony a základní webové utility.
     protected Container $di;
     protected Database $database;
 
@@ -32,6 +31,16 @@ abstract class BaseController
     public function isUserLoggedIn(): bool
     {
         return !empty($_SESSION['user_id']);
+    }
+
+    protected function requireLogin(string $redirectTo = 'prihlaseni'): void
+    {
+        if ($this->isUserLoggedIn()) {
+            return;
+        }
+
+        $this->addFlashMessage('Nejprve se přihlaste.', 'warning');
+        $this->redirect($redirectTo);
     }
 
     public function generateUrl(

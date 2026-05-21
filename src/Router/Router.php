@@ -75,7 +75,22 @@ class Router
         $action = $match['action'];
         $params = $match['params'];
 
+        if (!class_exists($controllerClass)) {
+            http_response_code(500);
+            echo 'Controller does not exist.';
+
+            return;
+        }
+
         $controller = new $controllerClass($container);
+
+        if (!method_exists($controller, $action)) {
+            http_response_code(500);
+            echo 'Controller action does not exist.';
+
+            return;
+        }
+
         $controller->$action(...array_values($params));
     }
 }

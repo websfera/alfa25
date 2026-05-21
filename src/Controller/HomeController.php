@@ -2,18 +2,9 @@
 
 namespace App\Controller;
 
-use App\DI\Container;
-use App\Enum\GenderEnum;
-use App\Model\Database;
-use App\Model\Entity\User;
-use App\Model\Repository\UserRepository;
-use App\Service\PasswordHasher;
-use DateTime;
-use PDO;
-use Tracy\Debugger;
-
 class HomeController extends BaseController
 {
+    // Prezentační controller statických stránek (bez business logiky).
     public function index(): void
     {
         $this->template->render(

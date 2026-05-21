@@ -3,6 +3,7 @@
 use App\Config\Config;
 use App\Controller\HomeController;
 use App\Controller\LogController;
+use App\Controller\MessengerController;
 use App\DI\Container;
 use App\Router\Router;
 use Tracy\Debugger;
@@ -14,8 +15,6 @@ if (!isset($_SESSION['user_id'])) {
 
 require 'vendor/autoload.php';
 Debugger::enable(false);
-
-Debugger::barDump($_SESSION);
 
 $config = new Config();
 $config->load(__DIR__ . '/config/config.yaml');
@@ -32,18 +31,14 @@ $router->addRoute("/kontakt", HomeController::class, "contact");
 
 // LogController
 $router->addRoute("/prihlaseni", LogController::class,'in');
+$router->addRoute("/registrace", LogController::class,'register');
 $router->addRoute("/odhlaseni", LogController::class,'out');
 
-// UserController
-$router->addRoute('/uzivatel/{id}', 'UserController', 'detail');
+// MessengerController
+$router->addRoute('/messenger', MessengerController::class, 'index');
+$router->addRoute('/messenger/nova/{userId}', MessengerController::class, 'createConversation');
+$router->addRoute('/messenger/{conversationId}', MessengerController::class, 'index');
 
 $di->addService('router', $router);
 
 $router->dispatch($_SERVER['REQUEST_URI'], $di);
-
-//Debugger::dump($_SERVER);
-//Debugger::dump($matchedRoute);
-
-//$controller = new HomeController();
-//
-//$controller->draw();

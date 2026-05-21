@@ -16,13 +16,16 @@ trait UuidTrait
         return $this->uuid;
     }
 
-    public function setUuid(Uuid|string|null $uuid = null): self
+    public function setUuid(UuidInterface|string|null $uuid = null): self
     {
         if ($uuid) {
-            if ($uuid instanceof Uuid) {
+            if ($uuid instanceof UuidInterface) {
                 $this->uuid = $uuid;
             } else {
-                $this->uuid = Uuid::fromBytes($uuid);
+                // String může být buď canonical UUID (36 znaků), nebo binární UUID (16 bajtů).
+                $this->uuid = strlen($uuid) === 16
+                    ? Uuid::fromBytes($uuid)
+                    : Uuid::fromString($uuid);
             }
         } else {
             $this->uuid = Uuid::uuid7();

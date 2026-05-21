@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DI\Container;
-use App\Model\Repository\UserRepository;
+use App\Model\Entity\User;
 use App\Service\PasswordHasher;
-use Tracy\Debugger;
 
 class LogController extends BaseController
 {
-    public function in()
+    // Controller zajišťuje přihlášení/registraci; práci s DB deleguje na repository.
+    public function in(): void
     {
-        // Heslo je "heslo"
+        if ($this->isUserLoggedIn()) {
+            $this->redirect('messenger');
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
@@ -21,35 +22,29 @@ class LogController extends BaseController
             if (empty($data['username']) || empty($data['password'])) {
                 $this->addFlashMessage('Vyplňte jméno a heslo', 'error');
                 $this->redirect("prihlaseni");
-
-                exit();
             }
 
             $username = $data['username'];
             $password = $data['password'];
 
-            $userRepository = new UserRepository($this->database);
+            $userRepository = $this->di->createUserRepository();
             $user = $userRepository->findByUsername($username);
 
             if (!$user) {
                 $this->addFlashMessage('Chybné přihlašovací údaje', 'error');
                 $this->redirect("prihlaseni");
-
-                exit();
             }
 
             $passwordService = new PasswordHasher();
             if (!$passwordService->verify($password, $user->getPassword())) {
                 $this->addFlashMessage('Chybné přihlašovací údaje', 'error');
                 $this->redirect("prihlaseni");
-
-                exit();
             }
 
             // prihlasime uzivatele
             $_SESSION['user_id'] = $user->getUuid()->toString();
             $this->addFlashMessage('Přihlášení proběhlo úspěšně');
-            $this->redirect();
+            $this->redirect('messenger');
         } else {
             $this->template->render(
                 'Log/in.phtml',
@@ -58,35 +53,83 @@ class LogController extends BaseController
                 ],
                 null,
             );
-
-//            $html = <<<HTML
-//<html lang="cs">
-//        <head></head>
-//        <body>
-//            <form method="post">
-//                <input type="text" name="username" placeholder="Uživatelské jméno">
-//                <input type="password" name="password" placeholder="Heslo">
-//                <input type="submit" name="login_submitted" value="Přihlásit">
-//            </form>
-//        </body>
-//</html>
-//
-//HTML;
-
-//            echo $html;
         }
     }
 
-    public function out()
+    public function out(): void
     {
-        session_destroy();
+        $_SESSION['user_id'] = null;
 
         $this->addFlashMessage('Odhlášeno', 'info');
-        $this->redirect();
+        $this->redirect('prihlaseni');
     }
 
-    public function register()
+    public function register(): void
     {
-        // registrace
+        if ($this->isUserLoggedIn()) {
+            $this->redirect('messenger');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
+
+            $username = trim((string)($data['username'] ?? ''));
+            $email = trim((string)($data['email'] ?? ''));
+            $firstName = trim((string)($data['first_name'] ?? ''));
+            $password = (string)($data['password'] ?? '');
+            $passwordConfirm = (string)($data['password_confirm'] ?? '');
+
+            if (
+                $username === '' ||
+                $email === '' ||
+                $firstName === '' ||
+                $password === '' ||
+                $passwordConfirm === ''
+            ) {
+                $this->addFlashMessage('Vyplňte všechna povinná pole.', 'error');
+                $this->redirect('registrace');
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->addFlashMessage('Neplatný e-mail.', 'error');
+                $this->redirect('registrace');
+            }
+
+            if (strlen($password) < 6) {
+                $this->addFlashMessage('Heslo musí mít alespoň 6 znaků.', 'error');
+                $this->redirect('registrace');
+            }
+
+            if ($password !== $passwordConfirm) {
+                $this->addFlashMessage('Hesla se neshodují.', 'error');
+                $this->redirect('registrace');
+            }
+
+            $userRepository = $this->di->createUserRepository();
+
+            if ($userRepository->findByUsername($username)) {
+                $this->addFlashMessage('Uživatelské jméno je již obsazené.', 'error');
+                $this->redirect('registrace');
+            }
+
+            if ($userRepository->findByEmail($email)) {
+                $this->addFlashMessage('E-mail je již použitý.', 'error');
+                $this->redirect('registrace');
+            }
+
+            $user = new User($username, $email, $password, $firstName);
+            $userRepository->save($user);
+
+            $this->addFlashMessage('Registrace proběhla úspěšně. Nyní se přihlaste.', 'success');
+            $this->redirect('prihlaseni');
+        }
+
+        $this->template->render(
+            'Log/register.phtml',
+            [
+                'flashMessages' => $this->getFlashMessages(),
+            ],
+            null,
+        );
     }
 }
