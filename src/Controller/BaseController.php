@@ -34,6 +34,24 @@ abstract class BaseController
         return !empty($_SESSION['user_id']);
     }
 
+    public function generateUrl(
+        string $controller,
+        string $action,
+        array $params = [],
+    ): string
+    {
+        $baseUrl = $this->di->getConfig('app.base_url');
+        $router = $this->di->getService('router');
+        $matchedUri = $router->generateUri($controller, $action);
+
+        $qs = "";
+        if (!empty($params)) {
+            $qs = '?' . http_build_query($params);
+        }
+
+        return $baseUrl . $matchedUri . $qs;
+    }
+
     protected function redirect(string $target = "", array $params = []): void
     {
         $baseUrl = $this->di->getConfig('app.base_url');

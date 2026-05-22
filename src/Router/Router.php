@@ -3,18 +3,18 @@
 namespace App\Router;
 
 use App\DI\Container;
+use RuntimeException;
 use Tracy\Debugger;
 
 class Router
 {
-    private const BASE_URL = "";
     private const REGEX = '/\{([a-zA-Z0-9_]+)\}/';
     private array $routes = [];
 
     public function addRoute(string $path, string $controller, string $action): void
     {
         $this->routes[] = [
-            'path' => self::BASE_URL . $path,
+            'path' => $path,
             'controller' => $controller,
             'action' => $action,
         ];
@@ -45,6 +45,19 @@ class Router
         }
 
         return null;
+    }
+
+    public function generateUri(string $controller, string $action): string
+    {
+        foreach ($this->routes as $route) {
+            if ($route['controller'] === $controller && $route['action'] === $action) {
+                return $route['path'];
+            }
+        }
+
+        throw new RuntimeException(
+            "No route found for controller: " . $controller . " and action: " . $action
+        );
     }
 
     public function dispatch(string $uri, Container $container): void

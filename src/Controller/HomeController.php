@@ -17,28 +17,32 @@ class HomeController extends BaseController
     public function index(): void
     {
         $this->template->render(
-            'Home/index.phtml'
+            'Home/index.phtml',
+            ['activePage' => 'home']
         );
     }
 
     public function about(): void
     {
         $this->template->render(
-            'Home/about.phtml'
+            'Home/about.phtml',
+            ['activePage' => 'about']
         );
     }
 
     public function developer(): void
     {
         $this->template->render(
-            'Home/developer.phtml'
+            'Home/developer.phtml',
+            ['activePage' => 'developer']
         );
     }
 
     public function contact(): void
     {
         $this->template->render(
-            'Home/contact.phtml'
+            'Home/contact.phtml',
+            ['activePage' => 'contact']
         );
     }
 }

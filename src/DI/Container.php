@@ -57,6 +57,17 @@ final class Container
         return $service;
     }
 
+    public function addService(string $name, mixed $service): void
+    {
+        if ($this->hasService($name)) {
+            throw new ServiceAlreadyExistsException(
+                'Service "' . $name . '" already exists in container.'
+            );
+        }
+
+        $this->services[$name] = $service;
+    }
+
     public function hasService(string $name): bool
     {
         return isset($this->services[$name]);

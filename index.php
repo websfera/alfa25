@@ -37,6 +37,8 @@ $router->addRoute("/odhlaseni", LogController::class,'out');
 // UserController
 $router->addRoute('/uzivatel/{id}', 'UserController', 'detail');
 
+$di->addService('router', $router);
+
 $router->dispatch($_SERVER['REQUEST_URI'], $di);
 
 //Debugger::dump($_SERVER);

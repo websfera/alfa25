@@ -1,3 +1,8 @@
+<?php
+
+use App\Controller\HomeController;
+
+?>
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -19,16 +24,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">Domů</a>
+                    <a class="nav-link <?= ($activePage ?? '') === 'home' ? 'active' : '' ?>" href="<?= $controller->generateUrl(HomeController::class, 'index') ?>">Domů</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/o-aplikaci">O aplikaci</a>
+                    <a class="nav-link <?= ($activePage ?? '') === 'about' ? 'active' : '' ?>" href="<?= $controller->generateUrl(HomeController::class, 'about') ?>">O aplikaci</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/o-vyvojari">O vývojáři</a>
+                    <a class="nav-link <?= ($activePage ?? '') === 'developer' ? 'active' : '' ?>" href="<?= $controller->generateUrl(HomeController::class, 'developer') ?>">O vývojáři</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/kontakt">Kontakt</a>
+                    <a class="nav-link <?= ($activePage ?? '') === 'contact' ? 'active' : '' ?>" href="<?= $controller->generateUrl(HomeController::class, 'contact') ?>">Kontakt</a>
                 </li>
             </ul>
             <div class="d-flex gap-2">
